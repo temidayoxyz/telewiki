@@ -1,0 +1,114 @@
+[
+  {
+    "text": "What is the capital of Australia?",
+    "options": ["Sydney", "Melbourne", "Canberra", "Perth"],
+    "answer": 2,
+    "explanation": "Canberra has been Australia's capital since 1913.",
+    "url": "https://en.wikipedia.org/wiki/Canberra",
+    "tag": "geography"
+  },
+  {
+    "text": "What is the chemical symbol for gold?",
+    "options": ["Gd", "Au", "Ag", "Go"],
+    "answer": 1,
+    "explanation": "Au comes from 'aurum', the Latin word for gold.",
+    "url": "https://en.wikipedia.org/wiki/Gold",
+    "tag": "science"
+  },
+  {
+    "text": "In which year did humans first land on the Moon?",
+    "options": ["1959", "1965", "1969", "1975"],
+    "answer": 2,
+    "explanation": "Apollo 11 landed Neil Armstrong and Buzz Aldrin on the Moon in 1969.",
+    "url": "https://en.wikipedia.org/wiki/Apollo_11",
+    "tag": "history"
+  },
+  {
+    "text": "Who wrote the novel '1984'?",
+    "options": ["Aldous Huxley", "Ray Bradbury", "H. G. Wells", "George Orwell"],
+    "answer": 3,
+    "explanation": "George Orwell published 'Nineteen Eighty-Four' in 1949.",
+    "url": "https://en.wikipedia.org/wiki/Nineteen_Eighty-Four",
+    "tag": "literature"
+  },
+  {
+    "text": "Which is the largest planet in the Solar System?",
+    "options": ["Saturn", "Jupiter", "Neptune", "Earth"],
+    "answer": 1,
+    "explanation": "Jupiter's mass is more than twice that of all other planets combined.",
+    "url": "https://en.wikipedia.org/wiki/Jupiter",
+    "tag": "science"
+  },
+  {
+    "text": "Which river flows through Egypt?",
+    "options": ["Niger", "Nile", "Congo", "Zambezi"],
+    "answer": 1,
+    "explanation": "The Nile flows north through Egypt to the Mediterranean Sea.",
+    "url": "https://en.wikipedia.org/wiki/Nile",
+    "tag": "geography"
+  },
+  {
+    "text": "Who painted the Mona Lisa?",
+    "options": ["Leonardo da Vinci", "Michelangelo", "Raphael", "Donatello"],
+    "answer": 0,
+    "explanation": "Leonardo da Vinci painted the Mona Lisa in the early 1500s.",
+    "url": "https://en.wikipedia.org/wiki/Mona_Lisa",
+    "tag": "art"
+  },
+  {
+    "text": "Who invented the World Wide Web?",
+    "options": ["Vint Cerf", "Tim Berners-Lee", "Alan Turing", "Linus Torvalds"],
+    "answer": 1,
+    "explanation": "Tim Berners-Lee proposed the Web in 1989 while at CERN.",
+    "url": "https://en.wikipedia.org/wiki/Tim_Berners-Lee",
+    "tag": "technology"
+  },
+  {
+    "text": "Approximately what is the speed of light in vacuum?",
+    "options": ["30,000 km/s", "150,000 km/s", "300,000 km/s", "1,000,000 km/s"],
+    "answer": 2,
+    "explanation": "The speed of light is exactly 299,792,458 metres per second.",
+    "url": "https://en.wikipedia.org/wiki/Speed_of_light",
+    "tag": "science"
+  },
+  {
+    "text": "Which element is first in the periodic table?",
+    "options": ["Helium", "Oxygen", "Hydrogen", "Lithium"],
+    "answer": 2,
+    "explanation": "Hydrogen has atomic number 1.",
+    "url": "https://en.wikipedia.org/wiki/Hydrogen",
+    "tag": "science"
+  },
+  {
+    "text": "Which country has the largest population (since 2023)?",
+    "options": ["China", "India", "United States", "Indonesia"],
+    "answer": 1,
+    "explanation": "India overtook China as the world's most populous country in 2023 (UN data).",
+    "url": "https://en.wikipedia.org/wiki/List_of_countries_by_population_(United_Nations)",
+    "tag": "geography"
+  },
+  {
+    "text": "How many squares are on a standard chessboard?",
+    "options": ["48", "64", "81", "100"],
+    "answer": 1,
+    "explanation": "A chessboard is an 8×8 grid: 64 squares.",
+    "url": "https://en.wikipedia.org/wiki/Chessboard",
+    "tag": "games"
+  },
+  {
+    "text": "Which is the largest ocean on Earth?",
+    "options": ["Atlantic", "Indian", "Arctic", "Pacific"],
+    "answer": 3,
+    "explanation": "The Pacific Ocean covers about one-third of Earth's surface.",
+    "url": "https://en.wikipedia.org/wiki/Pacific_Ocean",
+    "tag": "geography"
+  },
+  {
+    "text": "In which year did the Berlin Wall fall?",
+    "options": ["1979", "1985", "1989", "1991"],
+    "answer": 2,
+    "explanation": "The Berlin Wall fell on 9 November 1989.",
+    "url": "https://en.wikipedia.org/wiki/Berlin_Wall",
+    "tag": "history"
+  }
+]
