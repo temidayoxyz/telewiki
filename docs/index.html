@@ -3,40 +3,49 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TeleWiki — Wikipedia inside Telegram</title>
-  <meta name="description" content="TeleWiki is a free 3-in-1 Telegram bot: Wikipedia lookup, daily digests, and quiz games. No sign-up, no app to install.">
+  <title>TeleWiki — Wikipedia that lives where you argue</title>
+  <meta name="description" content="TeleWiki is a free Telegram bot: look up any Wikipedia article, get a morning briefing on your topics, and run trivia night — without leaving the chat.">
+  <meta name="theme-color" content="#0e1621">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='46' fill='%23229ED9'/><path d='M28 52l14 14 30-34' stroke='white' stroke-width='9' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>">
 </head>
 <body>
+  <a class="skip" href="#main">Skip to content</a>
 
-  <!-- 1 · Nav -->
+  <!-- ══════════ Nav ══════════ -->
   <header class="nav" id="top">
     <div class="wrap nav-inner">
       <a class="brand" href="#top" aria-label="TeleWiki home">
         <span class="brand-mark" aria-hidden="true"><i class="bi bi-send-fill"></i></span>
         <span class="brand-name">TeleWiki</span>
+        <span class="live-dot" aria-label="Bot online"><span aria-hidden="true"></span>online</span>
       </a>
       <nav class="nav-links" aria-label="Sections">
-        <a href="#features">Features</a>
-        <a href="#how">How it works</a>
+        <a href="#problem">Why</a>
+        <a href="#tour">Tour</a>
+        <a href="#modes">Groups</a>
+        <a href="#how">Setup</a>
         <a href="#commands">Commands</a>
         <a href="#faq">FAQ</a>
       </nav>
-      <a class="btn btn-primary btn-sm" href="https://t.me/tele_wikipedia_bot" target="_blank" rel="noopener">
-        <i class="bi bi-telegram" aria-hidden="true"></i> Open in Telegram
-      </a>
-      <button class="nav-toggle" aria-label="Menu" aria-expanded="false" aria-controls="mobile-menu">
-        <i class="bi bi-list" aria-hidden="true"></i>
-      </button>
+      <div class="nav-cta">
+        <a class="btn btn-primary btn-sm" href="https://t.me/tele_wikipedia_bot" target="_blank" rel="noopener">
+          <i class="bi bi-telegram" aria-hidden="true"></i><span>Open in Telegram</span>
+        </a>
+        <button class="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+          <i class="bi bi-list" aria-hidden="true"></i>
+        </button>
+      </div>
     </div>
     <nav class="mobile-menu" id="mobile-menu" aria-label="Mobile sections" hidden>
-      <a href="#features">Features</a>
-      <a href="#how">How it works</a>
+      <a href="#problem">Why TeleWiki</a>
+      <a href="#tour">Product tour</a>
+      <a href="#modes">DMs &amp; groups</a>
+      <a href="#how">Setup</a>
       <a href="#commands">Commands</a>
       <a href="#faq">FAQ</a>
       <a class="btn btn-primary" href="https://t.me/tele_wikipedia_bot" target="_blank" rel="noopener">
@@ -45,215 +54,412 @@
     </nav>
   </header>
 
-  <main>
-    <!-- 2 · Hero -->
-    <section class="hero">
-      <svg class="hero-bg" viewBox="0 0 800 600" aria-hidden="true" focusable="false">
-        <g fill="none" stroke="#229ED9" stroke-width="1.5" opacity="0.14">
-          <circle cx="650" cy="120" r="180"/>
-          <circle cx="650" cy="120" r="130"/>
-          <circle cx="650" cy="120" r="80"/>
-          <ellipse cx="650" cy="120" rx="180" ry="60"/>
-          <ellipse cx="650" cy="120" rx="180" ry="120"/>
-          <line x1="470" y1="120" x2="830" y2="120"/>
-          <line x1="650" y1="-60" x2="650" y2="300"/>
+  <main id="main">
+    <!-- ══════════ Hero ══════════ -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-texture" aria-hidden="true"></div>
+      <svg class="hero-orbit" viewBox="0 0 800 620" aria-hidden="true" focusable="false">
+        <g fill="none" stroke="#229ED9" stroke-width="1.4" opacity="0.16">
+          <circle cx="640" cy="130" r="190"/>
+          <circle cx="640" cy="130" r="138"/>
+          <circle cx="640" cy="130" r="86"/>
+          <ellipse cx="640" cy="130" rx="190" ry="62"/>
+          <line x1="450" y1="130" x2="830" y2="130"/>
+          <line x1="640" y1="-60" x2="640" y2="320"/>
         </g>
-        <g fill="#3366CC" opacity="0.16">
-          <rect x="120" y="420" width="26" height="26" rx="7" transform="rotate(12 133 433)"/>
-          <rect x="210" y="470" width="16" height="16" rx="5" transform="rotate(-10 218 478)"/>
-          <circle cx="90" cy="180" r="10"/>
-          <circle cx="330" cy="90" r="6"/>
+        <g fill="#3366CC" opacity="0.18">
+          <rect x="104" y="448" width="26" height="26" rx="7" transform="rotate(12 117 461)"/>
+          <circle cx="72" cy="196" r="9"/>
+          <circle cx="318" cy="84" r="6"/>
         </g>
       </svg>
       <div class="wrap hero-grid">
         <div class="hero-copy">
-          <p class="badge"><i class="bi bi-lightning-charge-fill" aria-hidden="true"></i> Free forever · No sign-up</p>
-          <h1>Wikipedia, <span class="accent">inside</span> Telegram.</h1>
-          <p class="lede">One bot, three habits: look up anything, get a daily briefing on your topics, and test yourself with quizzes — solo or with your group.</p>
+          <p class="badge"><i class="bi bi-lightning-charge-fill" aria-hidden="true"></i> Free forever · No sign-up · Open source</p>
+          <h1 id="hero-title">Wikipedia that lives <em>where&nbsp;you&nbsp;argue.</em></h1>
+          <p class="lede">TeleWiki is a Telegram bot for curious chats. Look up any article mid-debate, wake up to a briefing on your topics, and settle scores with trivia — without leaving the conversation.</p>
           <div class="hero-cta">
             <a class="btn btn-primary btn-lg" href="https://t.me/tele_wikipedia_bot" target="_blank" rel="noopener">
-              <i class="bi bi-telegram" aria-hidden="true"></i> Start chatting
+              <i class="bi bi-telegram" aria-hidden="true"></i> Open TeleWiki in Telegram
             </a>
-            <a class="btn btn-ghost btn-lg" href="#commands">See commands</a>
+            <a class="btn btn-ghost btn-lg" href="#tour"><span>Watch it work</span><i class="bi bi-arrow-down" aria-hidden="true"></i></a>
+          </div>
+          <div class="cmd-pill" data-copy-pill>
+            <code>/wiki black holes</code>
+            <button class="pill-copy" type="button" data-copy="/wiki black holes" aria-label="Copy command /wiki black holes">
+              <i class="bi bi-clipboard" aria-hidden="true"></i><span>Copied</span>
+            </button>
           </div>
           <ul class="hero-points">
             <li><i class="bi bi-check-circle-fill" aria-hidden="true"></i> Works in DMs and groups</li>
             <li><i class="bi bi-check-circle-fill" aria-hidden="true"></i> Nothing to install</li>
+            <li><i class="bi bi-check-circle-fill" aria-hidden="true"></i> Quiet until called</li>
           </ul>
         </div>
-        <div class="hero-demo" aria-label="Demo conversation with TeleWiki">
-          <div class="phone" role="img" aria-label="Animated demo: looking up black holes, then answering a quiz">
-            <div class="phone-notch" aria-hidden="true"></div>
-            <div class="phone-head">
-              <span class="avatar" aria-hidden="true">TW</span>
-              <span class="phone-meta"><strong>TeleWiki</strong><em>bot · online</em></span>
-              <i class="bi bi-three-dots-vertical" aria-hidden="true"></i>
+
+        <div class="hero-demo">
+          <div class="phone-shell">
+            <div class="demo-tabs" role="tablist" aria-label="Choose a demo">
+              <button role="tab" aria-selected="true" aria-controls="demo-panel" id="tab-wiki" data-demo="wiki" type="button"><i class="bi bi-search" aria-hidden="true"></i>Lookup</button>
+              <button role="tab" aria-selected="false" aria-controls="demo-panel" id="tab-quiz" data-demo="quiz" type="button" tabindex="-1"><i class="bi bi-puzzle-fill" aria-hidden="true"></i>Quiz</button>
+              <button role="tab" aria-selected="false" aria-controls="demo-panel" id="tab-digest" data-demo="digest" type="button" tabindex="-1"><i class="bi bi-newspaper" aria-hidden="true"></i>Digest</button>
             </div>
-            <div class="chat" id="chat" aria-hidden="true"></div>
-            <div class="phone-input" aria-hidden="true"><span>Message</span><i class="bi bi-mic-fill"></i></div>
+            <div class="phone" role="img" aria-label="Demo of TeleWiki inside Telegram. Switch tabs to see lookup, quiz and digest.">
+              <div class="phone-notch" aria-hidden="true"></div>
+              <div class="phone-head" aria-hidden="true">
+                <span class="avatar">TW</span>
+                <span class="phone-meta"><strong>TeleWiki</strong><em><span class="presence"></span>bot · online</em></span>
+                <i class="bi bi-three-dots-vertical"></i>
+              </div>
+              <div class="chat" id="demo-panel" role="tabpanel" aria-live="off" aria-hidden="true" tabindex="0"></div>
+              <div class="phone-input" aria-hidden="true"><span id="phone-hint">Message</span><i class="bi bi-mic-fill"></i></div>
+            </div>
+            <p class="demo-caption"><span class="demo-dot" aria-hidden="true"></span><span id="demo-caption">Live replay — a real /wiki lookup, answers and all.</span></p>
+            <p class="sr-only">Demo transcript: user sends /wiki black holes, bot replies with a summary of the Black hole article. User sends /quiz space, bot asks when humans first landed on the Moon, user answers C 1969 and scores points.</p>
           </div>
         </div>
       </div>
-    </section>
 
-    <!-- 3 · Stats strip -->
-    <section class="strip" aria-label="At a glance">
-      <div class="wrap strip-grid">
-        <div class="stat"><strong>8</strong><span>commands</span></div>
-        <div class="stat"><strong>3-in-1</strong><span>lookup · digest · quiz</span></div>
-        <div class="stat"><strong>100%</strong><span>free, no account</span></div>
-        <div class="stat"><strong>24/7</strong><span>always online</span></div>
+      <div class="wrap trustbar" aria-label="Facts about TeleWiki">
+        <div class="trust-item"><i class="bi bi-globe" aria-hidden="true"></i><span>Reads the real Wikipedia API</span></div>
+        <div class="trust-item"><i class="bi bi-github" aria-hidden="true"></i><span>Open source on GitHub</span></div>
+        <div class="trust-item"><i class="bi bi-volume-mute-fill" aria-hidden="true"></i><span>Silent in groups until called</span></div>
+        <div class="trust-item"><i class="bi bi-clock-fill" aria-hidden="true"></i><span>Today on Wikipedia: <strong id="today-stamp">—</strong></span></div>
       </div>
     </section>
 
-    <!-- 4 · Features -->
-    <section class="section" id="features">
-      <div class="wrap">
-        <p class="eyebrow">Features</p>
-        <h2>Three tools, one chat.</h2>
-        <p class="section-sub">Everything runs where you already talk. No new app, no new password.</p>
-        <div class="cards">
-          <article class="card reveal">
-            <span class="card-icon blue" aria-hidden="true"><i class="bi bi-search"></i></span>
-            <h3>Wiki lookup</h3>
-            <p>Article summaries with photos, links, and smart handling of ambiguous titles.</p>
-            <ul>
-              <li>Instant summaries in-chat</li>
-              <li>Disambiguation picker</li>
-              <li>Jump straight into a quiz</li>
-            </ul>
-            <code>/wiki black holes</code>
+    <!-- ══════════ Problem ══════════ -->
+    <section class="section problem" id="problem" aria-labelledby="problem-title">
+      <div class="wrap problem-grid">
+        <div class="problem-lede reveal">
+          <p class="eyebrow">Why it exists</p>
+          <h2 id="problem-title">Curiosity leaves the chat.<br><span class="serif">Then the moment dies.</span></h2>
+          <p>Someone claims the Moon landing was faked. Someone else says “let me Google that.” Ten minutes later the thread is about lunch. The question never got answered — because answering it meant leaving.</p>
+          <a class="text-cta" href="#tour">See what staying looks like <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+        </div>
+        <div class="pain-list">
+          <article class="pain reveal">
+            <span class="pain-icon" aria-hidden="true"><i class="bi bi-box-arrow-up-right"></i></span>
+            <div><h3>Context-switch kills questions</h3><p>Every answer buried in a browser tab is an answer nobody reads. The debate moves on without it.</p></div>
           </article>
-          <article class="card reveal">
-            <span class="card-icon indigo" aria-hidden="true"><i class="bi bi-newspaper"></i></span>
-            <h3>Daily digest</h3>
-            <p>A morning briefing on the topics you follow, delivered to any chat.</p>
-            <ul>
-              <li>Featured article of the day</li>
-              <li>“On this day” in history</li>
-              <li>Your topics, your time (UTC)</li>
-            </ul>
-            <code>/digest add physics 08:00</code>
+          <article class="pain reveal">
+            <span class="pain-icon" aria-hidden="true"><i class="bi bi-link-45deg"></i></span>
+            <div><h3>Links rot in history</h3><p>A pasted URL with no summary gets scrolled past. Nobody clicks a bare link mid-argument.</p></div>
           </article>
-          <article class="card reveal">
-            <span class="card-icon gold" aria-hidden="true"><i class="bi bi-puzzle-fill"></i></span>
-            <h3>Quiz game</h3>
-            <p>Fresh questions every day, with points, streaks, and leaderboards.</p>
-            <ul>
-              <li>Endless sessions in DMs</li>
-              <li>Fastest-answer-wins in groups</li>
-              <li>Streak bonuses and leaderboards</li>
-            </ul>
-            <code>/quiz space</code>
+          <article class="pain reveal">
+            <span class="pain-icon" aria-hidden="true"><i class="bi bi-emoji-smile"></i></span>
+            <div><h3>Trivia needs a host</h3><p>“Quiz night” never happens without someone writing questions, keeping score, and herding players.</p></div>
           </article>
         </div>
       </div>
     </section>
 
-    <!-- 5 · How it works -->
-    <section class="section alt" id="how">
+    <!-- ══════════ Tour ══════════ -->
+    <section class="section tour" id="tour" aria-labelledby="tour-title">
       <div class="wrap">
-        <p class="eyebrow">How it works</p>
-        <h2>Sixty seconds to your first quiz.</h2>
-        <div class="steps">
-          <div class="step reveal">
-            <span class="step-n">1</span>
-            <i class="bi bi-telegram step-icon" aria-hidden="true"></i>
+        <p class="eyebrow">Product tour</p>
+        <h2 id="tour-title">One bot, three habits.</h2>
+        <p class="section-sub">Each one runs entirely inside Telegram. Try the live panels — they behave like the real thing.</p>
+
+        <!-- 01 Lookup -->
+        <article class="split reveal" aria-labelledby="lookup-title">
+          <div class="split-copy">
+            <p class="tool-tag lookup"><i class="bi bi-search" aria-hidden="true"></i> 01 · Lookup</p>
+            <h3 id="lookup-title">Settle the debate before anyone opens a browser.</h3>
+            <p>Type <code>/wiki</code> and get the article where the argument is: summary, photo when Wikipedia has one, and a link to read more. Ambiguous title? Pick from the matches instead of guessing.</p>
+            <ul class="ticks">
+              <li><i class="bi bi-check-lg" aria-hidden="true"></i> Summaries with photos, in-chat</li>
+              <li><i class="bi bi-check-lg" aria-hidden="true"></i> Disambiguation picker for near-matches</li>
+              <li><i class="bi bi-check-lg" aria-hidden="true"></i> One tap from article to quiz on it</li>
+            </ul>
+            <div class="cmd-row">
+              <code>/wiki black holes</code>
+              <button class="mini-copy" type="button" data-copy="/wiki black holes" aria-label="Copy /wiki black holes"><i class="bi bi-clipboard" aria-hidden="true"></i><span>Copied</span></button>
+            </div>
+          </div>
+          <div class="split-demo">
+            <div class="article-card" id="wiki-demo">
+              <div class="article-photo" aria-hidden="true"><span>Black hole · M87*</span></div>
+              <div class="article-body">
+                <p class="article-kicker">Wikipedia · Article</p>
+                <h4 id="wiki-demo-title">Black hole</h4>
+                <p id="wiki-demo-text">A region of spacetime where gravity is so strong that nothing — not even light — escapes. Stellar-mass holes form when massive stars collapse.</p>
+                <p class="article-link"><i class="bi bi-box-arrow-up-right" aria-hidden="true"></i> Read full article on Wikipedia →</p>
+                <div class="article-pick" role="group" aria-label="Ambiguous titles, pick one">
+                  <span>Also found:</span>
+                  <div class="pick-row" id="wiki-picks">
+                    <button type="button" class="pick is-active" data-article="hole">Black hole</button>
+                    <button type="button" class="pick" data-article="film">Black Hole (1979 film)</button>
+                    <button type="button" class="pick" data-article="interstellar">Interstellar (film)</button>
+                  </div>
+                </div>
+                <button class="btn btn-quiz" type="button" id="wiki-quiz-btn"><i class="bi bi-dice-5-fill" aria-hidden="true"></i> Quiz me on this</button>
+                <p class="demo-note" id="wiki-demo-note" role="status">Tap a match to swap the summary — like the bot's buttons.</p>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- 02 Digest -->
+        <article class="split flip reveal" aria-labelledby="digest-title">
+          <div class="split-copy">
+            <p class="tool-tag digest"><i class="bi bi-newspaper" aria-hidden="true"></i> 02 · Digest</p>
+            <h3 id="digest-title">A morning briefing on exactly your obsessions.</h3>
+            <p>Subscribe any chat to topics, pick an hour (UTC), and TeleWiki delivers the featured article plus “on this day” events matched to what you follow. Schedules survive restarts; if the bot leaves, the subscription quietly switches off.</p>
+            <ul class="ticks">
+              <li><i class="bi bi-check-lg" aria-hidden="true"></i> Featured article of the day</li>
+              <li><i class="bi bi-check-lg" aria-hidden="true"></i> “On this day” filtered by your topics</li>
+              <li><i class="bi bi-check-lg" aria-hidden="true"></i> Per-chat time, pause and resume</li>
+            </ul>
+            <div class="cmd-row">
+              <code>/digest add physics space 08:00</code>
+              <button class="mini-copy" type="button" data-copy="/digest add physics space 08:00" aria-label="Copy digest subscribe command"><i class="bi bi-clipboard" aria-hidden="true"></i><span>Copied</span></button>
+            </div>
+          </div>
+          <div class="split-demo">
+            <div class="broadsheet" aria-live="polite">
+              <div class="sheet-head">
+                <span><i class="bi bi-newspaper" aria-hidden="true"></i> Your daily digest</span>
+                <span class="sheet-date" id="sheet-date">08:00 UTC</span>
+              </div>
+              <p class="sheet-star">🌟 <strong>Featured: Black hole</strong> — how collapsing stars punch holes in spacetime. <span>Read →</span></p>
+              <p class="sheet-sub">📅 On this day — tap a topic to filter:</p>
+              <div class="chip-row" id="digest-chips" role="group" aria-label="Filter digest events by topic">
+                <button type="button" class="chip is-on" data-topic="all" aria-pressed="true">All</button>
+                <button type="button" class="chip" data-topic="space" aria-pressed="false">space</button>
+                <button type="button" class="chip" data-topic="physics" aria-pressed="false">physics</button>
+                <button type="button" class="chip" data-topic="history" aria-pressed="false">history</button>
+              </div>
+              <ul class="sheet-events" id="digest-events">
+                <li data-topics="space history"><strong>1969 —</strong> Apollo 11 lands; humans walk on the Moon.</li>
+                <li data-topics="physics"><strong>1915 —</strong> Einstein presents the field equations of general relativity.</li>
+                <li data-topics="space"><strong>1990 —</strong> The Hubble telescope returns its first images from orbit.</li>
+                <li data-topics="history"><strong>1989 —</strong> The World Wide Web proposal is circulated at CERN.</li>
+              </ul>
+              <p class="sheet-foot">Topics: physics, space · <span>/digest</span> for settings</p>
+            </div>
+          </div>
+        </article>
+
+        <!-- 03 Quiz -->
+        <article class="split reveal" aria-labelledby="quiz-title">
+          <div class="split-copy">
+            <p class="tool-tag quiz"><i class="bi bi-puzzle-fill" aria-hidden="true"></i> 03 · Quiz</p>
+            <h3 id="quiz-title">Trivia night with no host and no prep.</h3>
+            <p>Questions are built from today's “on this day” events plus a curated bank, so there's always something fresh. Answer with a tap; streaks earn bonus points. Play it — wrong answers and all:</p>
+            <ul class="ticks">
+              <li><i class="bi bi-check-lg" aria-hidden="true"></i> Fresh questions daily, topic-optional</li>
+              <li><i class="bi bi-check-lg" aria-hidden="true"></i> Points, streaks, per-chat leaderboards</li>
+              <li><i class="bi bi-check-lg" aria-hidden="true"></i> Wrong guesses in groups don't spoil the round</li>
+            </ul>
+            <div class="cmd-row">
+              <code>/quiz space</code>
+              <button class="mini-copy" type="button" data-copy="/quiz space" aria-label="Copy /quiz space"><i class="bi bi-clipboard" aria-hidden="true"></i><span>Copied</span></button>
+            </div>
+          </div>
+          <div class="split-demo">
+            <div class="quiz-card" id="quiz-demo">
+              <p class="quiz-kicker">🧠 Quiz · <em>space</em></p>
+              <p class="quiz-q">In which year did humans first land on the Moon?</p>
+              <div class="quiz-opts" role="group" aria-label="Quiz answers">
+                <button type="button" data-correct="false">A · 1959</button>
+                <button type="button" data-correct="false">B · 1965</button>
+                <button type="button" data-correct="true">C · 1969</button>
+                <button type="button" data-correct="false">D · 1975</button>
+              </div>
+              <p class="quiz-result" id="quiz-result" role="status">Pick an answer — the bot scores it instantly.</p>
+              <button class="quiz-reset" type="button" id="quiz-reset" hidden>Play again <i class="bi bi-arrow-clockwise" aria-hidden="true"></i></button>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ══════════ Modes ══════════ -->
+    <section class="section modes" id="modes" aria-labelledby="modes-title">
+      <div class="wrap">
+        <p class="eyebrow">Two arenas</p>
+        <h2 id="modes-title">Solo grind. Group glory.</h2>
+        <p class="section-sub">Same bot, different energy. TeleWiki reads the room: endless sessions in DMs, one decisive round at a time in groups.</p>
+        <div class="mode-grid">
+          <article class="mode reveal">
+            <div class="mode-head"><i class="bi bi-person-fill" aria-hidden="true"></i><h3>In your DMs</h3></div>
+            <p class="mode-line">A session that keeps dealing until you say stop.</p>
+            <div class="mode-chat" aria-hidden="true">
+              <span class="m user">/quiz</span>
+              <span class="m bot">🧠 Which planet has the Great Red Spot? …</span>
+              <span class="m user">Jupiter</span>
+              <span class="m bot">✅ +12 pts · streak 🔥×3 — next question…</span>
+            </div>
+            <ul>
+              <li>New question follows every answer automatically</li>
+              <li>Ends only on <code>/stop</code></li>
+              <li>Your <code>/score</code> tracks points, accuracy, streak</li>
+            </ul>
+          </article>
+          <article class="mode versus reveal">
+            <div class="mode-head"><i class="bi bi-people-fill" aria-hidden="true"></i><h3>In the group</h3></div>
+            <p class="mode-line">Fastest correct answer takes the round.</p>
+            <div class="board" aria-label="Example leaderboard">
+              <p class="board-title">🏆 Leaderboard · this chat</p>
+              <ol>
+                <li><span>🥇 Ada</span><strong>240 pts</strong></li>
+                <li><span>🥈 Ken</span><strong>195 pts</strong></li>
+                <li><span>🥉 You</span><strong>180 pts</strong></li>
+              </ol>
+            </div>
+            <ul>
+              <li>Wrong guesses cost nothing — anyone can jump in</li>
+              <li>Winner revealed with points and streak</li>
+              <li>Plain chatter ignored, so no spam, ever</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ How ══════════ -->
+    <section class="section how" id="how" aria-labelledby="how-title">
+      <div class="wrap">
+        <p class="eyebrow">Setup</p>
+        <h2 id="how-title">Sixty seconds to your first answer.</h2>
+        <p class="section-sub">If you can message a friend, you already know how to use this.</p>
+        <ol class="timeline">
+          <li class="reveal">
+            <span class="t-time">0:10</span>
+            <span class="t-icon" aria-hidden="true"><i class="bi bi-telegram"></i></span>
             <h3>Open Telegram</h3>
-            <p>Any device, any platform. If you can message a friend, you're set.</p>
-          </div>
-          <div class="step reveal">
-            <span class="step-n">2</span>
-            <i class="bi bi-chat-dots-fill step-icon" aria-hidden="true"></i>
+            <p>Any device, any platform. No new app, no new password.</p>
+          </li>
+          <li class="reveal">
+            <span class="t-time">0:30</span>
+            <span class="t-icon" aria-hidden="true"><i class="bi bi-chat-dots-fill"></i></span>
             <h3>Start the bot</h3>
-            <p>Open <a href="https://t.me/tele_wikipedia_bot" target="_blank" rel="noopener">@tele_wikipedia_bot</a> and press Start.</p>
-          </div>
-          <div class="step reveal">
-            <span class="step-n">3</span>
-            <i class="bi bi-keyboard-fill step-icon" aria-hidden="true"></i>
-            <h3>Type a command</h3>
+            <p>Open <a href="https://t.me/tele_wikipedia_bot" target="_blank" rel="noopener">@tele_wikipedia_bot</a> and press Start. Add it to a group the same way.</p>
+          </li>
+          <li class="reveal">
+            <span class="t-time">0:60</span>
+            <span class="t-icon" aria-hidden="true"><i class="bi bi-keyboard-fill"></i></span>
+            <h3>Type one command</h3>
             <p>Try <code>/wiki</code>, <code>/digest</code> or <code>/quiz</code>. That's the whole manual.</p>
-          </div>
+          </li>
+        </ol>
+        <div class="how-cta reveal">
+          <a class="btn btn-primary btn-lg" href="https://t.me/tele_wikipedia_bot" target="_blank" rel="noopener"><i class="bi bi-telegram" aria-hidden="true"></i> Start chatting now</a>
+          <p>Free forever · Takes under a minute</p>
         </div>
       </div>
     </section>
 
-    <!-- 6 · Commands -->
-    <section class="section" id="commands">
+    <!-- ══════════ Commands ══════════ -->
+    <section class="section commands" id="commands" aria-labelledby="cmd-title">
       <div class="wrap">
-        <p class="eyebrow">Commands</p>
-        <h2>The full vocabulary.</h2>
-        <p class="section-sub">Eight commands. Type <code>/</code> in any chat with the bot to see them.</p>
-        <div class="cmd-grid">
-          <div class="cmd reveal"><code>/start</code><p>Welcome message and overview.</p></div>
-          <div class="cmd reveal"><code>/help</code><p>Full guide with examples.</p></div>
-          <div class="cmd reveal"><code>/wiki &lt;topic&gt;</code><p>Look up an article. <span class="ex">/wiki black holes</span></p></div>
-          <div class="cmd reveal"><code>/quiz [topic]</code><p>Start playing. DMs run until <span class="ex">/stop</span>.</p></div>
-          <div class="cmd reveal"><code>/stop</code><p>End the quiz session.</p></div>
-          <div class="cmd reveal"><code>/score</code><p>Your points, accuracy and streak.</p></div>
-          <div class="cmd reveal"><code>/leaderboard</code><p>Top players in the chat.</p></div>
-          <div class="cmd reveal"><code>/digest …</code><p>Subscribe and tune the daily briefing. <span class="ex">/digest add physics</span></p></div>
+        <p class="eyebrow">Cheat sheet</p>
+        <h2 id="cmd-title">The full vocabulary.</h2>
+        <p class="section-sub">Eight commands. Type <code>/</code> in any chat with the bot to see them autocomplete.</p>
+        <div class="terminal reveal">
+          <div class="term-bar" aria-hidden="true"><span></span><span></span><span></span><em>telewiki — commands</em></div>
+          <div class="term-search">
+            <i class="bi bi-search" aria-hidden="true"></i>
+            <label class="sr-only" for="cmd-filter">Filter commands</label>
+            <input id="cmd-filter" type="search" placeholder="Filter commands… try “score” or “digest”" autocomplete="off">
+          </div>
+          <ul class="term-list" id="cmd-list">
+            <li data-keys="start welcome begin"><code>/start</code><p>Welcome message and what the bot can do.</p><button type="button" data-copy="/start" aria-label="Copy /start"><i class="bi bi-clipboard" aria-hidden="true"></i></button></li>
+            <li data-keys="help guide commands"><code>/help</code><p>Full guide with examples for every command.</p><button type="button" data-copy="/help" aria-label="Copy /help"><i class="bi bi-clipboard" aria-hidden="true"></i></button></li>
+            <li data-keys="wiki lookup article search"><code>/wiki &lt;topic&gt;</code><p>Article summary with photo and link. <span class="ex">/wiki black holes</span></p><button type="button" data-copy="/wiki black holes" aria-label="Copy example wiki command"><i class="bi bi-clipboard" aria-hidden="true"></i></button></li>
+            <li data-keys="quiz trivia game play"><code>/quiz [topic]</code><p>A question on demand. DMs keep dealing until <span class="ex">/stop</span>.</p><button type="button" data-copy="/quiz space" aria-label="Copy example quiz command"><i class="bi bi-clipboard" aria-hidden="true"></i></button></li>
+            <li data-keys="stop end quit session"><code>/stop</code><p>End the DM quiz session. Groups don't need it.</p><button type="button" data-copy="/stop" aria-label="Copy /stop"><i class="bi bi-clipboard" aria-hidden="true"></i></button></li>
+            <li data-keys="score points streak accuracy"><code>/score</code><p>Your points, accuracy and streak in this chat.</p><button type="button" data-copy="/score" aria-label="Copy /score"><i class="bi bi-clipboard" aria-hidden="true"></i></button></li>
+            <li data-keys="leaderboard top ranking winners"><code>/leaderboard</code><p>Top players in this chat.</p><button type="button" data-copy="/leaderboard" aria-label="Copy /leaderboard"><i class="bi bi-clipboard" aria-hidden="true"></i></button></li>
+            <li data-keys="digest briefing subscribe morning news topics time"><code>/digest …</code><p>Daily briefing. <span class="ex">/digest add physics 08:00</span> · list · time · on/off</p><button type="button" data-copy="/digest add physics 08:00" aria-label="Copy example digest command"><i class="bi bi-clipboard" aria-hidden="true"></i></button></li>
+          </ul>
+          <p class="term-empty" id="cmd-empty" hidden>No command matches that. Try “quiz” or “digest”.</p>
         </div>
       </div>
     </section>
 
-    <!-- 7 · FAQ -->
-    <section class="section alt" id="faq">
+    <!-- ══════════ Principles ══════════ -->
+    <section class="section principles" id="why" aria-labelledby="why-title">
+      <div class="wrap">
+        <p class="eyebrow">Why trust it</p>
+        <h2 id="why-title">Small bot. Serious manners.</h2>
+        <p class="section-sub">Built to be invited into chats and never regretted.</p>
+        <div class="bento">
+          <article class="tile wide reveal"><i class="bi bi-github" aria-hidden="true"></i><h3>Open source, inspectable</h3><p>The whole bot — lookup, digest scheduler, quiz engine — is on GitHub. Thirty-six unit tests cover scoring, parsing and storage. Nothing hidden.</p></article>
+          <article class="tile reveal"><i class="bi bi-wallet2" aria-hidden="true"></i><h3>No account, no ads</h3><p>Free tier infrastructure, free public APIs. Nothing to buy, nothing tracking you.</p></article>
+          <article class="tile reveal"><i class="bi bi-volume-mute-fill" aria-hidden="true"></i><h3>Quiet by design</h3><p>Plain messages get silence in groups and a short menu in DMs. The bot speaks only when asked.</p></article>
+          <article class="tile reveal"><i class="bi bi-arrow-clockwise" aria-hidden="true"></i><h3>Survives restarts</h3><p>Digest schedules and scores live in SQLite and come back after every reboot.</p></article>
+          <article class="tile reveal"><i class="bi bi-feather" aria-hidden="true"></i><h3>Light as a feather</h3><p>Idles under 256 MB — a single small VM keeps it online around the clock.</p></article>
+          <article class="tile wide reveal"><i class="bi bi-journal-text" aria-hidden="true"></i><h3>Wikipedia, credited properly</h3><p>Content comes straight from Wikipedia and Wikidata via public APIs. Article text is by Wikipedia contributors, available under CC BY-SA.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ FAQ ══════════ -->
+    <section class="section faq-sec" id="faq" aria-labelledby="faq-title">
       <div class="wrap narrow">
         <p class="eyebrow">FAQ</p>
-        <h2>Good questions.</h2>
+        <h2 id="faq-title">Good questions.</h2>
         <div class="faq">
-          <details class="reveal">
-            <summary>Is TeleWiki really free?<i class="bi bi-chevron-down" aria-hidden="true"></i></summary>
-            <p>Yes. No premium tier, no ads, no account. It runs on free-tier infrastructure and free public APIs (Telegram + Wikipedia).</p>
+          <details class="reveal" open>
+            <summary>Is it really free?<i class="bi bi-chevron-down" aria-hidden="true"></i></summary>
+            <p>Yes. No premium tier, no ads, no account. It runs on free-tier hosting with Telegram's and Wikipedia's free public APIs.</p>
           </details>
           <details class="reveal">
-            <summary>Do I need to install anything?</summary>
-            <p>No. If you have Telegram, you already have everything. Open the bot and type a command.</p>
+            <summary>Do I need to install anything?<i class="bi bi-chevron-down" aria-hidden="true"></i></summary>
+            <p>No. If you have Telegram, you're done. Open the bot, press Start, type a command.</p>
           </details>
           <details class="reveal">
-            <summary>Can I use it in group chats?</summary>
-            <p>Yes — add the bot to any group. Quizzes become fastest-answer-wins competitions with a shared leaderboard. Plain chatter is ignored so the bot never spams.</p>
+            <summary>How does it behave in groups?<i class="bi bi-chevron-down" aria-hidden="true"></i></summary>
+            <p>Add it like any member. Quizzes become fastest-answer-wins with a shared leaderboard, and ordinary conversation is ignored — the bot never chimes in uninvited.</p>
           </details>
           <details class="reveal">
-            <summary>How do digest times work?</summary>
-            <p>Times are in UTC. For example, <code>/digest time 08:00</code> delivers at 8am UTC daily. Pick the hour closest to your morning.</p>
+            <summary>How do digest times work?<i class="bi bi-chevron-down" aria-hidden="true"></i></summary>
+            <p>Times are UTC. <code>/digest add physics 08:00</code> delivers at 8am UTC; <code>/digest time 18:30</code> moves it. Pause anytime with <code>/digest off</code>.</p>
           </details>
           <details class="reveal">
-            <summary>Which languages are supported?</summary>
-            <p>The bot currently reads the English Wikipedia. More language editions are on the roadmap.</p>
+            <summary>Which languages are supported?<i class="bi bi-chevron-down" aria-hidden="true"></i></summary>
+            <p>English Wikipedia today; per-user language preferences are on the roadmap.</p>
           </details>
           <details class="reveal">
-            <summary>Where does the content come from?</summary>
-            <p>Directly from Wikipedia and Wikidata via public APIs. Article text is by Wikipedia contributors, available under CC BY-SA.</p>
+            <summary>Who writes the answers?<i class="bi bi-chevron-down" aria-hidden="true"></i></summary>
+            <p>Wikipedia contributors. TeleWiki fetches summaries, featured articles and “on this day” events live, and always links back to the source article.</p>
           </details>
         </div>
       </div>
     </section>
 
-    <!-- 8 · CTA + footer -->
-    <section class="cta">
+    <!-- ══════════ CTA ══════════ -->
+    <section class="finale" aria-labelledby="cta-title">
       <div class="wrap">
         <div class="cta-panel reveal">
-          <h2>Your daily dose of “huh, neat.”</h2>
-          <p>Join TeleWiki and turn idle minutes into things you know.</p>
-          <a class="btn btn-light btn-lg" href="https://t.me/tele_wikipedia_bot" target="_blank" rel="noopener">
-            <i class="bi bi-telegram" aria-hidden="true"></i> Open TeleWiki in Telegram
-          </a>
+          <p class="cta-kicker"><i class="bi bi-telegram" aria-hidden="true"></i> @tele_wikipedia_bot · online now</p>
+          <h2 id="cta-title">Bring the library to the group&nbsp;chat.</h2>
+          <p class="cta-sub">Your next debate, briefing and trivia night are one tap away. <span class="serif-accent">Takes sixty seconds.</span></p>
+          <div class="cta-row">
+            <a class="btn btn-light btn-lg" href="https://t.me/tele_wikipedia_bot" target="_blank" rel="noopener"><i class="bi bi-telegram" aria-hidden="true"></i> Open TeleWiki in Telegram</a>
+            <a class="btn btn-outline-light btn-lg" href="https://github.com/temidayoxyz/telewiki" target="_blank" rel="noopener"><i class="bi bi-github" aria-hidden="true"></i> Read the source</a>
+          </div>
+          <p class="cta-fine">Free forever · No sign-up · Works in DMs and groups</p>
         </div>
         <footer class="footer">
-          <span class="brand mini"><span class="brand-mark" aria-hidden="true"><i class="bi bi-send-fill"></i></span> TeleWiki</span>
-          <nav aria-label="Footer">
-            <a href="https://t.me/tele_wikipedia_bot" target="_blank" rel="noopener"><i class="bi bi-telegram" aria-hidden="true"></i> Bot</a>
-            <a href="https://github.com/temidayoxyz/telewiki" target="_blank" rel="noopener"><i class="bi bi-github" aria-hidden="true"></i> Source</a>
-            <a href="#top">Back to top <i class="bi bi-arrow-up" aria-hidden="true"></i></a>
-          </nav>
-          <small>Not affiliated with Telegram or Wikipedia · © <span id="year">2026</span> TeleWiki</small>
+          <div class="foot-brand">
+            <span class="brand mini"><span class="brand-mark" aria-hidden="true"><i class="bi bi-send-fill"></i></span><span class="brand-name">TeleWiki</span></span>
+            <p>Wikipedia inside Telegram — lookup, digest, quiz.</p>
+          </div>
+          <nav aria-label="Footer product"><p>Product</p><a href="#tour">Tour</a><a href="#modes">DMs &amp; groups</a><a href="#commands">Commands</a><a href="#faq">FAQ</a></nav>
+          <nav aria-label="Footer resources"><p>Resources</p><a href="https://t.me/tele_wikipedia_bot" target="_blank" rel="noopener"><i class="bi bi-telegram" aria-hidden="true"></i> The bot</a><a href="https://github.com/temidayoxyz/telewiki" target="_blank" rel="noopener"><i class="bi bi-github" aria-hidden="true"></i> Source code</a><a href="https://www.wikipedia.org" target="_blank" rel="noopener">Wikipedia</a></nav>
+          <div class="foot-base">
+            <small>Not affiliated with Telegram or Wikipedia · Article text by Wikipedia contributors (CC BY-SA) · © <span id="year">2026</span> TeleWiki</small>
+            <a class="to-top" href="#top">Back to top <i class="bi bi-arrow-up" aria-hidden="true"></i></a>
+          </div>
         </footer>
       </div>
     </section>
   </main>
 
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
   <script src="app.js"></script>
 </body>
 </html>
