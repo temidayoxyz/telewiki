@@ -149,9 +149,9 @@
       hint: 'Message',
       lines: [
         ['user', '/wiki black holes', 600],
-        ['bot', '<b>Black hole</b><br>A region of spacetime where gravity is so strong that nothing escapes.<br><span class="src">Wikipedia · photo included →</span><span class="kbd">🎲 Quiz me on this</span>', 1700],
-        ['user', 'Mercury? no — /wiki mercury', 500],
-        ['bot', '🤔 <b>Mercury</b> could mean several things — pick one:<br><span class="opt">📖 Mercury (planet)</span><span class="opt">📖 Mercury (element)</span><span class="opt">📖 Mercury (mythology)</span>', 2600]
+        ['bot', '<span class="paper"><span class="paper-k">Wikipedia · Article</span><span class="paper-t">Black hole</span><span class="paper-x">A region of spacetime where gravity is so strong that nothing escapes.</span><span class="paper-l">Read full article →</span></span><span class="kbd">🎲 Quiz me on this</span>', 2200],
+        ['user', 'that one — /wiki mercury', 500],
+        ['bot', '🤔 <b>Mercury</b> could mean several things — pick one:<span class="opt">📖 Mercury (planet)</span><span class="opt">📖 Mercury (element)</span><span class="opt">📖 Mercury (mythology)</span>', 2600]
       ]
     },
     quiz: {
