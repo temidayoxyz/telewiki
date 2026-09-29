@@ -2,6 +2,11 @@
 
 import unittest
 
+from telewiki.handlers.wiki import (
+    MAX_ALTERNATIVES,
+    _buttons,
+    _disambiguation_buttons,
+)
 from telewiki.wikipedia import (
     format_summary_html,
     parse_onthisday_response,
@@ -117,6 +122,98 @@ class FormatTests(unittest.TestCase):
         summary = parse_summary_response({**SUMMARY_FIXTURE, "extract": "<script>alert(1)</script>"})
         out = format_summary_html(summary)
         self.assertNotIn("<script>", out)
+
+
+class WikiKeyboardTests(unittest.TestCase):
+    """The article keyboard must point at the article it shows.
+
+    `callback_data` carries an index into the stored `titles` list, not into
+    the displayed alternatives — indexing the alternatives shifts every button
+    one article back.
+    """
+
+    TITLES = [
+        "Mercury (element)",
+        "Mercury (planet)",
+        "Mercury (mythology)",
+        "Mercury (drug)",
+        "Mercury (band)",
+    ]
+
+    def _summary(self, title):
+        return parse_summary_response(
+            {
+                "type": "standard",
+                "title": title,
+                "extract": "extract",
+                "content_urls": {"desktop": {"page": "https://en.wikipedia.org/wiki/X"}},
+            }
+        )
+
+    def _resolve(self, markup):
+        """Map each button label to the title its callback_data would open."""
+        pairs = []
+        for row in markup.inline_keyboard:
+            for button in row:
+                data = button.callback_data
+                if not data.startswith("wk:"):
+                    continue
+                index = int(data.split(":")[1])
+                pairs.append((button.text, self.TITLES[index]))
+        return pairs
+
+    def test_alternative_buttons_open_the_article_they_name(self):
+        summary = self._summary(self.TITLES[0])
+        markup = _buttons(summary, self.TITLES, self.TITLES[1:])
+        pairs = self._resolve(markup)
+        self.assertEqual(len(pairs), 4)
+        for label, opened in pairs:
+            self.assertIn(opened, label, f"button {label!r} opens {opened!r}")
+
+    def test_alternative_buttons_skip_already_shown_article(self):
+        """After picking an alternative, that article is on screen — don't re-offer it."""
+        summary = self._summary(self.TITLES[1])
+        markup = _buttons(summary, self.TITLES, [t for t in self.TITLES if t != summary.title])
+        pairs = self._resolve(markup)
+        opened = [opened for _, opened in pairs]
+        self.assertNotIn(summary.title, opened)
+        for label, title in pairs:
+            self.assertIn(title, label)
+
+    def test_repeated_picks_do_not_shift_the_buttons(self):
+        """Picking one article re-indexes the rest against the stored title list."""
+        titles = self.TITLES
+        for picked in (0, 1, 3):
+            summary = self._summary(titles[picked])
+            remaining = [t for t in titles if t != summary.title]
+            for label, opened in self._resolve(_buttons(summary, titles, remaining)):
+                self.assertIn(opened, label, f"after picking {picked}: {label!r}")
+
+    def test_disambiguation_picker_has_no_quiz_button(self):
+        """Nothing to quiz on yet — the button would only answer 'expired'."""
+        markup = _disambiguation_buttons(self.TITLES)
+        callbacks = [
+            b.callback_data for row in markup.inline_keyboard for b in row
+        ]
+        self.assertNotIn("qzm", callbacks)
+
+    def test_disambiguation_picker_opens_the_right_articles(self):
+        pairs = self._resolve(_disambiguation_buttons(self.TITLES))
+        self.assertEqual([opened for _, opened in pairs], self.TITLES[1:5])
+        for label, opened in pairs:
+            self.assertIn(opened, label)
+
+    def test_article_keyboard_offers_quiz(self):
+        markup = _buttons(self._summary(self.TITLES[0]), self.TITLES, self.TITLES[1:])
+        callbacks = [
+            b.callback_data for row in markup.inline_keyboard for b in row
+        ]
+        self.assertIn("qzm", callbacks)
+
+    def test_alternatives_are_capped(self):
+        summary = self._summary(self.TITLES[0])
+        markup = _buttons(summary, self.TITLES, self.TITLES)
+        self.assertEqual(len(self._resolve(markup)), MAX_ALTERNATIVES)
 
 
 if __name__ == "__main__":

@@ -14,6 +14,7 @@ log = logging.getLogger(__name__)
 
 USAGE = "Usage: /wiki <i>topic</i>\nExample: /wiki <i>black holes</i>"
 MAX_BUTTON_TITLE = 40
+MAX_ALTERNATIVES = 4
 
 
 def _search_key(chat_id: int, user_id: int) -> str:
@@ -28,18 +29,41 @@ def _short(title: str) -> str:
     return title if len(title) <= MAX_BUTTON_TITLE else title[: MAX_BUTTON_TITLE - 1] + "…"
 
 
-def _buttons(summary: ArticleSummary, alternatives: list) -> InlineKeyboardMarkup:
+def _alternative_buttons(titles: list, alternatives: list) -> list:
+    """One button per alternative title, indexed against the full title list.
+
+    `callback_data` must carry the index into `titles` — the callback handler
+    resolves it there. Deriving the index from `alternatives` instead would
+    point every button at the wrong article.
+    """
+    return [
+        [
+            InlineKeyboardButton(
+                f"📖 {_short(alt)}", callback_data=f"wk:{titles.index(alt)}"
+            )
+        ]
+        for alt in alternatives[:MAX_ALTERNATIVES]
+    ]
+
+def _buttons(
+    summary: ArticleSummary, titles: list, alternatives: list
+) -> InlineKeyboardMarkup:
+    """Article keyboard: 'quiz me on this' plus the alternative titles."""
     rows = [[InlineKeyboardButton("🎲 Quiz me on this", callback_data="qzm")]]
-    for i, alt in enumerate(alternatives[:4]):
-        rows.append([InlineKeyboardButton(f"📖 {_short(alt)}", callback_data=f"wk:{i}")])
+    rows += _alternative_buttons(titles, alternatives)
     return InlineKeyboardMarkup(rows)
 
 
+def _disambiguation_buttons(titles: list) -> InlineKeyboardMarkup:
+    """Picker for an ambiguous query — no quiz button, nothing to quiz on yet."""
+    return InlineKeyboardMarkup(_alternative_buttons(titles, titles[1:]))
+
+
 async def _deliver(
-    placeholder: Message, summary: ArticleSummary, alternatives: list
+    placeholder: Message, summary: ArticleSummary, titles: list, alternatives: list
 ) -> Message:
     """Replace the 'searching…' placeholder with the article (photo if available)."""
-    markup = _buttons(summary, alternatives)
+    markup = _buttons(summary, titles, alternatives)
     if summary.image:
         sent = await placeholder.chat.send_photo(
             photo=summary.image,
@@ -101,17 +125,21 @@ async def wiki_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
         return
 
     if summary.is_disambiguation:
+        # A disambiguation page has no single topic to quiz on, so the "quiz me"
+        # button would have nothing to read. Drop it rather than render a button
+        # that always answers "that topic expired". Picking an article below
+        # stores its topic, so the button appears on the resolved article.
         await placeholder.edit_text(
             f"🤔 <b>{html.escape(summary.title)}</b> could mean several things — pick one:",
             parse_mode=ParseMode.HTML,
-            reply_markup=_buttons(summary, titles[1:]),
+            reply_markup=_disambiguation_buttons(titles),
         )
         return
 
     context.bot_data[_quiz_topic_key(update.effective_chat.id, update.effective_user.id)] = (
         summary.title
     )
-    await _deliver(placeholder, summary, titles[1:])
+    await _deliver(placeholder, summary, titles, titles[1:])
 
 
 async def wiki_choice_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -139,7 +167,9 @@ async def wiki_choice_callback(update: Update, context: ContextTypes.DEFAULT_TYP
     context.bot_data[_quiz_topic_key(update.effective_chat.id, update.effective_user.id)] = (
         summary.title
     )
-    markup = _buttons(summary, [t for t in titles if t != summary.title])
+    # Index the remaining buttons against the stored `titles` list so repeated
+    # picks keep pointing at the right article.
+    markup = _buttons(summary, titles, [t for t in titles if t != summary.title])
     text = format_summary_html(summary)
     if query.message.photo:
         await query.edit_message_caption(
