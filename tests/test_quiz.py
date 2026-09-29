@@ -1,9 +1,12 @@
 """Tests for the quiz engine — pure logic, no network."""
 
+import os
 import random
+import tempfile
 import unittest
 from pathlib import Path
 from types import SimpleNamespace
+from unittest.mock import AsyncMock
 
 from telewiki.quiz import (
     Question,
@@ -14,6 +17,7 @@ from telewiki.quiz import (
     load_bank,
     new_quiz_id,
 )
+from telewiki.storage import Database
 
 BANK_PATH = Path(__file__).resolve().parent.parent / "telewiki" / "data" / "questions.json"
 
@@ -149,6 +153,153 @@ class SessionTests(unittest.TestCase):
         self.assertIn("/quiz", MENU_TEXT)
         self.assertIn("/wiki", MENU_TEXT)
         self.assertIn("/digest", MENU_TEXT)
+
+
+CHAT_ID = 42
+USER_ID = 7
+
+
+class _FakeBot:
+    """Records every quiz question the handlers try to send."""
+
+    def __init__(self, chat_type: str):
+        self._chat_type = chat_type
+        self.sent: list = []
+
+    async def get_chat(self, chat_id):
+        return SimpleNamespace(type=self._chat_type)
+
+    async def send_message(self, chat_id, text, **kwargs):
+        message = SimpleNamespace(message_id=len(self.sent) + 1, text=text, photo=None)
+        self.sent.append(message)
+        return message
+
+
+class _FakeQuery:
+    def __init__(self, data=None, message_id=1, user_id=USER_ID):
+        self.data = data
+        self.message = SimpleNamespace(message_id=message_id)
+        self.from_user = SimpleNamespace(id=user_id, mention_html=lambda: "@user")
+        self.answers: list = []
+        self.edits: list = []
+
+    async def answer(self, text=None):
+        self.answers.append(text)
+
+    async def edit_message_text(self, text, **kwargs):
+        self.edits.append(text)
+
+    async def reply_text(self, text, **kwargs):
+        pass
+
+
+class QuizButtonSessionTests(unittest.IsolatedAsyncioTestCase):
+    """'Quiz me on this' must behave like /quiz.
+
+    The button used to send a single question and never register a session, so
+    answering correctly ended the round instead of continuing.
+    """
+
+    def setUp(self):
+        from telewiki.handlers import quiz as handlers
+
+        self.h = handlers
+        self.h.ACTIVE.clear()
+        self.h.SESSIONS.clear()
+        self._tmp = tempfile.NamedTemporaryFile(suffix=".db", delete=False)
+        self._tmp.close()
+        self.db = Database(self._tmp.name)
+
+    def tearDown(self):
+        self.h.ACTIVE.clear()
+        self.h.SESSIONS.clear()
+        self.db.close()
+        os.unlink(self._tmp.name)
+
+    def _context(self, chat_type: str):
+        self.bot = _FakeBot(chat_type)
+        self.context = SimpleNamespace(
+            bot=self.bot,
+            bot_data={
+                "db": self.db,
+                "engine": QuizEngine(load_bank(str(BANK_PATH))),
+                "wiki": SimpleNamespace(on_this_day=AsyncMock(return_value=[])),
+            },
+        )
+        return self.context
+
+    async def _press_quiz_button(self, chat_type: str = "private"):
+        from telewiki.handlers.wiki import _quiz_topic_key
+
+        self._context(chat_type)
+        self.context.bot_data[_quiz_topic_key(CHAT_ID, USER_ID)] = "Mercury (planet)"
+        query = _FakeQuery()
+        await self.h.quiz_me_callback(
+            SimpleNamespace(
+                callback_query=query,
+                effective_chat=SimpleNamespace(id=CHAT_ID, type=chat_type),
+                effective_user=SimpleNamespace(id=USER_ID),
+                effective_message=SimpleNamespace(reply_text=AsyncMock()),
+            ),
+            self.context,
+        )
+
+    async def _answer_correctly(self, chat_type: str = "private"):
+        (_chat, message_id), active = next(iter(self.h.ACTIVE.items()))
+        query = _FakeQuery(
+            data=encode_answer(active.quiz_id, active.question.correct_index),
+            message_id=message_id,
+        )
+        await self.h.quiz_answer_callback(
+            SimpleNamespace(
+                callback_query=query,
+                effective_chat=SimpleNamespace(id=CHAT_ID, type=chat_type),
+            ),
+            self.context,
+        )
+
+    async def test_button_registers_a_session_in_a_dm(self):
+        await self._press_quiz_button()
+        self.assertEqual(len(self.bot.sent), 1)
+        self.assertTrue(self.h.in_session(CHAT_ID))
+
+    async def test_correct_answer_continues_the_quiz(self):
+        await self._press_quiz_button()
+        await self._answer_correctly()
+        self.assertEqual(len(self.bot.sent), 2, "no follow-up question was sent")
+
+    async def test_session_keeps_the_wiki_topic(self):
+        await self._press_quiz_button()
+        self.assertEqual(self.h.session_topic(CHAT_ID), "Mercury (planet)")
+        await self._answer_correctly()
+        self.assertEqual(self.h.session_topic(CHAT_ID), "Mercury (planet)")
+
+    async def test_stop_ends_a_button_started_session(self):
+        await self._press_quiz_button()
+        self.assertTrue(self.h.end_session(CHAT_ID))
+        self.assertFalse(self.h.in_session(CHAT_ID))
+
+    async def test_group_button_stays_one_round(self):
+        """Groups are one round at a time — no session, no follow-up question."""
+        await self._press_quiz_button(chat_type="supergroup")
+        self.assertFalse(self.h.in_session(CHAT_ID))
+        await self._answer_correctly(chat_type="supergroup")
+        self.assertEqual(len(self.bot.sent), 1)
+
+    async def test_expired_topic_is_reported(self):
+        self._context("private")  # no topic stored for this user
+        query = _FakeQuery()
+        await self.h.quiz_me_callback(
+            SimpleNamespace(
+                callback_query=query,
+                effective_chat=SimpleNamespace(id=CHAT_ID, type="private"),
+                effective_user=SimpleNamespace(id=USER_ID),
+                effective_message=SimpleNamespace(reply_text=AsyncMock()),
+            ),
+            self.context,
+        )
+        self.assertEqual(len(self.bot.sent), 0)
+        self.assertIn("expired", query.answers[0].lower())
 
 
 if __name__ == "__main__":

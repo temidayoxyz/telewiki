@@ -180,13 +180,20 @@ async def quiz_me_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -
         await query.answer("That topic expired — search again with /wiki.")
         return
     await query.answer()
+    chat_id = update.effective_chat.id
     try:
-        await send_quiz(context, update.effective_chat.id, topic=topic)
+        await send_quiz(context, chat_id, topic=topic)
     except Exception:
         log.exception("failed to send quiz from wiki topic")
         await update.effective_message.reply_text(
             "⚠️ Couldn't start a quiz right now. Try again in a bit."
         )
+        return
+    # Mirrors /quiz: a private-chat quiz keeps going until /stop. Without a
+    # session, answering correctly would end the round after one question.
+    # Groups stay one round at a time, same as /quiz.
+    if update.effective_chat.type == "private":
+        start_session(chat_id, topic)
 
 
 async def quiz_answer_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
