@@ -40,6 +40,10 @@ def main() -> None:
     logging.basicConfig(
         format="%(asctime)s %(levelname)s %(name)s: %(message)s", level=logging.INFO
     )
+    # httpx logs every request URL at INFO, and Telegram puts the bot token in
+    # the URL path — that would write the token to stdout and to any log file.
+    # Keep httpx quiet; our own "telewiki" logger stays at INFO.
+    logging.getLogger("httpx").setLevel(logging.WARNING)
     settings = load_settings()
     db = Database(settings.db_path)
     wiki = WikipediaClient(lang=settings.wiki_lang, user_agent=settings.user_agent)
