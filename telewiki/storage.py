@@ -1,8 +1,41 @@
 """SQLite persistence for TeleWiki: digest subscriptions and quiz scores."""
 
 import json
+import logging
 import sqlite3
 from dataclasses import dataclass
+
+log = logging.getLogger(__name__)
+
+# The shape every table is expected to have.
+#
+# CREATE TABLE IF NOT EXISTS will not alter a table that already exists, so a
+# column added to _init_schema is silently ignored on any database created
+# before it — the new code then fails at runtime with "no such column", long
+# after the deploy reported itself healthy. _migrate() walks this and adds
+# whatever is missing, so an additive change reaches live databases on deploy
+# and existing rows keep their data.
+#
+# Additive only. Every column must be nullable or carry a DEFAULT, because
+# SQLite cannot ADD COLUMN ... NOT NULL without one. Widening, renaming or
+# dropping a column needs a table rebuild that copies rows — that is a
+# deliberate, hand-written migration, not something to do automatically.
+EXPECTED_COLUMNS: dict = {
+    "subscriptions": {
+        "chat_id": "INTEGER",
+        "topics": "TEXT NOT NULL DEFAULT '[]'",
+        "time": "TEXT NOT NULL DEFAULT '08:00'",
+        "enabled": "INTEGER NOT NULL DEFAULT 1",
+    },
+    "scores": {
+        "user_id": "INTEGER",
+        "chat_id": "INTEGER",
+        "points": "INTEGER NOT NULL DEFAULT 0",
+        "streak": "INTEGER NOT NULL DEFAULT 0",
+        "correct": "INTEGER NOT NULL DEFAULT 0",
+        "answered": "INTEGER NOT NULL DEFAULT 0",
+    },
+}
 
 
 @dataclass
@@ -24,6 +57,7 @@ class Database:
         self._conn = sqlite3.connect(path)
         self._conn.row_factory = sqlite3.Row
         self._init_schema()
+        self._migrate()
 
     def _init_schema(self) -> None:
         with self._conn:
@@ -46,6 +80,28 @@ class Database:
                 );
                 """
             )
+
+    def _migrate(self) -> None:
+        """Add any column in EXPECTED_COLUMNS that an existing table lacks.
+
+        CREATE TABLE IF NOT EXISTS leaves an existing table untouched, so this
+        is what makes a newly added column actually appear on a database that
+        predates it. Idempotent, and it never rewrites or drops a row.
+        """
+        for table, columns in EXPECTED_COLUMNS.items():
+            present = {
+                row["name"]
+                for row in self._conn.execute(f"PRAGMA table_info({table})")
+            }
+            if not present:
+                # Table doesn't exist in this database; _init_schema owns it.
+                continue
+            for name, decl in columns.items():
+                if name in present:
+                    continue
+                with self._conn:
+                    self._conn.execute(f"ALTER TABLE {table} ADD COLUMN {name} {decl}")
+                log.info("migrated %s: added column %s", table, name)
 
     # -- subscriptions ----------------------------------------------------
 
