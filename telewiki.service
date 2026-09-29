@@ -8,9 +8,15 @@ Type=simple
 User=telewiki
 WorkingDirectory=/opt/telewiki
 ExecStart=/opt/telewiki/.venv/bin/python /opt/telewiki/main.py
-Restart=on-failure
+Restart=always
 RestartSec=10
 Environment=PYTHONUNBUFFERED=1
+
+# Resource ceilings for a shared e2-micro (0.25 vCPU, ~1 GB RAM). Keep the bot
+# from starving whatever else runs on the box, and keep it from OOM-ing
+# anything else. Raise MemoryMax only if the bot is actually being killed.
+MemoryMax=384M
+CPUWeight=200
 
 [Install]
 WantedBy=multi-user.target

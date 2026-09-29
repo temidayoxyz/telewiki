@@ -1,0 +1,52 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# A second push arriving mid-deploy waits its turn instead of cancelling a
+# deploy that may be halfway through a restart or rollback.
+concurrency:
+  group: deploy-to-vm
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Test, then deploy to e2-micro
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check required secrets
+        env:
+          VM_HOST: ${{ secrets.VM_HOST }}
+          VM_USER: ${{ secrets.VM_USER }}
+          VM_SSH_KEY: ${{ secrets.VM_SSH_KEY }}
+        run: |
+          missing=0
+          [ -n "$VM_HOST" ]   || { echo "::error::secret VM_HOST is not set";   missing=1; }
+          [ -n "$VM_USER" ]   || { echo "::error::secret VM_USER is not set";   missing=1; }
+          [ -n "$VM_SSH_KEY" ] || { echo "::error::secret VM_SSH_KEY is not set"; missing=1; }
+          exit $missing
+
+      # Never ship a commit that fails the suite — the tests need no network,
+      # so this runs in seconds and gates the deploy.
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install --quiet -r requirements.txt
+      - run: python -m unittest discover -s tests
+
+      # authorized_keys pins this key to the deploy script with a forced
+      # command, so the key cannot be used for anything else on the VM.
+      - name: Run deploy script on the VM
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.VM_HOST }}
+          username: ${{ secrets.VM_USER }}
+          key: ${{ secrets.VM_SSH_KEY }}
+          script: /opt/telewiki/deploy/deploy.sh
